@@ -1,11 +1,10 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 import httplib2
 import os
-import sys
 import io
  
-from glob import glob
 from apiclient import discovery
 from apiclient.http import MediaIoBaseDownload
 from oauth2gdrive import get_credentials
@@ -47,7 +46,9 @@ def get_folder_id(service):
                                          fields='files(id, name)').execute()
     for folder in response.get('files', []):
         return folder.get('id')
- 
+
+
+
 def list_files(service,since='2017-12-01T00:00:00'):
     folder_id = get_folder_id(service)
     query = "mimeType='" + FILE_MIME_TYPE + "'" + " and '{0}' in parents".format(folder_id)
@@ -58,7 +59,9 @@ def list_files(service,since='2017-12-01T00:00:00'):
         fields="nextPageToken, files(id, name)").execute()
     items = results.get('files', [])
     return items
- 
+
+
+
 if __name__ == '__main__':
     # OAuth 2.0の認証プロセスを実行する
     credentials = get_credentials(APPLICATION_NAME, SCOPES)
@@ -68,4 +71,3 @@ if __name__ == '__main__':
     for item in items:
         print(item)
         download_file('./download/',item['name'],item['id'])
- 
