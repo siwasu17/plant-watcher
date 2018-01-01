@@ -23,26 +23,20 @@ IMG_DIR = 'images'
 # アップロードするファイルの拡張子
 FILE_EXTENSION = 'jpg'
 # ファイルを格納するGoogle Driveのフォルダ
+# 全画像を入れるフォルダ
 DRIVE_DIR_ALL = 'TL_ALL'
+# 検知したい物体が写っている画像だけを入れるフォルダ
 DRIVE_DIR_CORRECT = 'TL_CORRECT'
 # Google DriveのフォルダのmimeType
 FOLDER_MIME_TYPE = 'application/vnd.google-apps.folder'
 # アップロードするファイルのmimeType
 FILE_MIME_TYPE = 'image/jpeg'
 
+# 検知したい物体のラベル名
 CORRECT_LABELS = ['flowerpot','houseplant','plant','bonsai','wood']
 
 def create_folder(drive_service,dir_name):
-    ''' Google Driveにアップロードするファイルを格納するホルダを作成する
- 
-    Google Driveに指定のフォルダが存在するかをチェックする
-　　・指定のフォルダが存在しない場合は、新規にフォルダを作成する
-    ・既に指定のフォルダが存在する場合は、フォルダの作成をスキップする
- 
-    Returns:
-        folder-id, Google DriveのフォルダID
-    '''
- 
+    ''' Google Driveにアップロードするファイルを格納するフォルダを作成する '''
     # 指定のフォルダが存在するかを問い合わせる
     query = "mimeType='" + FOLDER_MIME_TYPE + "'" + " and name='" + dir_name + "'"
     response = drive_service.files().list(q=query,
@@ -99,7 +93,7 @@ def upload_file(drive_service, drive_folder_id, upload_file_path):
     print('Upload sucssesful:' + created_file.get('name'))
 
 
-def uploadfiles(watch_dir):
+def upload_files(watch_dir):
     # OAuth 2.0の認証プロセスを実行する
     credentials = get_credentials(APPLICATION_NAME, SCOPES)
     http = credentials.authorize(httplib2.Http())
@@ -133,4 +127,4 @@ def uploadfiles(watch_dir):
         shutil.move(file_path,trash_dir)
  
 if __name__ == '__main__':
-    uploadfiles("./images")
+    upload_files("./images")
